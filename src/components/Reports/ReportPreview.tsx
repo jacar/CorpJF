@@ -35,6 +35,7 @@ const ReportPreview: React.FC<ReportPreviewProps> = ({
   const [signatures, setSignatures] = useState<Signature[]>([]);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const reportRef = useRef<HTMLDivElement>(null);
   const [reportData, setReportData] = useState({
     conductor: '',
@@ -111,35 +112,138 @@ const ReportPreview: React.FC<ReportPreviewProps> = ({
     }
   };
 
-  const shareViaWhatsApp = async () => {
-    setIsSharing(true);
+  const sharePdfBlob = async (pdfBlob: Blob, fileName: string): Promise<boolean> => {
     try {
-      const pdfBlob = await downloadPDFStructured(true); // Generar PDF como blob
-      if (!pdfBlob) {
-        throw new Error('No se pudo generar el PDF.');
+      // Verificar si la API de compartir archivos está disponible
+      if (!navigator.share || !navigator.canShare || !navigator.canShare({ files: [] })) {
+        return false;
       }
 
-      const pdfFile = new File([pdfBlob], `reporte_${reportData.conductor}.pdf`, { type: 'application/pdf' });
-
-      // Intentar usar la API nativa para compartir (ideal para móviles)
-      if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
-        await navigator.share({
-          files: [pdfFile],
-          title: 'Reporte de Viaje',
-          text: `Reporte de viaje para ${reportData.conductor}`,
-        });
-      } else {
-        // Método alternativo para navegadores de escritorio o no compatibles
-        alert('El PDF se descargará. Por favor, adjúntalo manualmente en WhatsApp.');
-        await downloadPDFStructured(); // Descargar el archivo
-        const text = encodeURIComponent(`Hola, te envío el reporte de viaje para ${reportData.conductor}.`);
-        window.open(`https://wa.me/?text=${text}`, '_blank');
+      // Crear archivo con el nombre adecuado
+      const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+      
+      // Verificar si se puede compartir este archivo
+      if (!navigator.canShare({ files: [file] })) {
+        return false;
       }
+
+      // Compartir el archivo
+      await navigator.share({
+        files: [file],
+        title: 'Reporte de Viaje',
+        text: 'Aquí está el reporte de viaje generado.'
+      });
+      
+      return true; // Éxito al compartir
     } catch (error) {
-      console.error("Error al compartir por WhatsApp:", error);
-      if (!(error instanceof DOMException && error.name === 'AbortError')) {
-        alert('Hubo un error al intentar compartir el reporte.');
+      console.error('Error al compartir el archivo:', error);
+      return false; // Falló al compartir
+    }
+  };
+
+  const shareViaWhatsApp = async () => {
+    try {
+      setIsSharing(true);
+      setError(null);
+      
+      // Generate the PDF
+      const pdfBlob = await downloadPDFStructured(true);
+      if (!pdfBlob) {
+        throw new Error('No se pudo generar el PDF');
       }
+
+      // Create file and URL
+      const currentDate = new Date().toISOString().split('T')[0];
+      const conductorName = reportData.conductor.replace(/\s+/g, '_');
+      const fileName = `Reporte_${conductorName}_${currentDate}.pdf`;
+      const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // For Android and iOS - use Web Share API first
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: 'Reporte de Viaje',
+            text: 'Aquí está el reporte de viaje generado.'
+          });
+          return;
+        } catch (shareError) {
+          console.log('Web Share API error:', shareError);
+          // Fall through to other methods
+        }
+      }
+
+      // For iOS - try WhatsApp URL scheme with base64 data
+      if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const base64data = e.target?.result as string;
+          const base64Content = base64data.split(',')[1];
+          
+          // Try to send the file directly via WhatsApp
+          const whatsappUrl = `whatsapp://send?text=Reporte%20de%20Viaje&document=data:application/pdf;name=${encodeURIComponent(fileName)};base64,${base64Content}`;
+          
+          // Open WhatsApp with the file
+          window.location.href = whatsappUrl;
+          
+          // Fallback if WhatsApp doesn't open
+          setTimeout(() => {
+            if (!document.hidden) {
+              // If we're still here, WhatsApp didn't open
+              // Try the Web Share API again as fallback
+              if (navigator.share) {
+                navigator.share({
+                  files: [file],
+                  title: 'Reporte de Viaje',
+                  text: 'Aquí está el reporte de viaje generado.'
+                }).catch(() => {
+                  // If sharing fails, download the file
+                  downloadFile(pdfUrl, fileName);
+                });
+              } else {
+                // Last resort: download the file
+                downloadFile(pdfUrl, fileName);
+              }
+            }
+          }, 1000);
+        };
+        reader.onerror = () => {
+          throw new Error('Error al leer el archivo');
+        };
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      // For desktop or other devices
+      if (navigator.share) {
+        // Try Web Share API first if available
+        try {
+          await navigator.share({
+            files: [file],
+            title: 'Reporte de Viaje',
+            text: 'Aquí está el reporte de viaje generado.'
+          });
+        } catch (e) {
+          // If Web Share fails, download the file
+          downloadFile(pdfUrl, fileName);
+        }
+      } else {
+        // For browsers without Web Share API, download the file
+        downloadFile(pdfUrl, fileName);
+        
+        // Show a message to the user
+        alert('El archivo se ha descargado. Por favor, ábrelo y compártelo manualmente por WhatsApp.');
+      }
+
+      // Clean up
+      setTimeout(() => {
+        URL.revokeObjectURL(pdfUrl);
+      }, 5000);
+      
+    } catch (err) {
+      console.error('Error al compartir por WhatsApp:', err);
+      setError('Error al compartir el reporte. Por favor intente nuevamente.');
     } finally {
       setIsSharing(false);
     }
@@ -221,7 +325,6 @@ const ReportPreview: React.FC<ReportPreviewProps> = ({
         doc.setFontSize(10);
         doc.setFontSize(7);
         doc.text('RIF: J-50014920-4', pageWidth - margin - rightLogoWidth - 2 + rightLogoWidth / 2, y + rightLogoHeight + 3, { align: 'center' });
-        doc.text(`ID: ${reportData.reportId}`, pageWidth - margin - rightLogoWidth - 2 + rightLogoWidth / 2, y + rightLogoHeight + 8, { align: 'center' });
         // AREA box under title (left)
         const areaY = y + headerHeight;
         const areaW = 55;
@@ -477,6 +580,15 @@ const ReportPreview: React.FC<ReportPreviewProps> = ({
     return { nombre: '', cedula: '', gerencia: '', horaSalida: '', horaLlegada: '' };
   });
 
+  const downloadFile = (url: string, fileName: string) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
       <div className="bg-white rounded-lg shadow-2xl w-full max-w-7xl max-h-[95vh] overflow-hidden flex flex-col modal-container">
@@ -498,6 +610,16 @@ const ReportPreview: React.FC<ReportPreviewProps> = ({
               >
                 <Download className="h-5 w-5" />
                 <span>{isGeneratingPDF ? 'Generando...' : 'Descargar PDF'}</span>
+              </button>
+              <button
+                onClick={shareViaWhatsApp}
+                disabled={isGeneratingPDF || isSharing}
+                className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+                  <path d="M17.498 14.382v-.002c-.301-.15-1.767-.867-2.04-.966-.274-.101-.473-.15-.673.149-.197.295-.771.964-.944 1.162-.175.195-.349.21-.646.075-.3-.15-1.263-.465-2.403-1.485-.888-.795-1.484-1.761-1.66-2.059-.173-.297-.018-.458.13-.606.136-.135.298-.353.446-.523.15-.173.198-.296.298-.495.1-.198.05-.371-.025-.52-.075-.15-.672-1.62-.922-2.207-.24-.584-.487-.51-.672-.517-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.359-.273.3-1.045 1.02-1.045 2.475s1.07 2.865 1.219 3.075c.15.195 2.1 3.195 5.1 4.485.714.3 1.27.489 1.71.625.713.227 1.36.195 1.87.118.57-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.135-.27-.21-.57-.355m-5.446 7.443h-.016a9.87 9.87 0 01-5.031-1.379l-.36-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.549 4.142 1.595 5.945L0 24l6.335-1.652a11.882 11.882 0 005.723 1.471h.006c6.554 0 11.89-5.335 11.89-11.893 0-3.18-1.261-6.189-3.553-8.463"/>
+                </svg>
+                <span>{isSharing ? 'Compartiendo...' : 'Compartir'}</span>
               </button>
             </div>
           </div>
@@ -669,7 +791,6 @@ const ReportPreview: React.FC<ReportPreviewProps> = ({
                     }}
                   />
                   <div className="rif-text">RIF: J-50014920-4</div>
-                  <div className="rif-text" style={{ marginTop: '5px' }}>ID: {reportData.reportId}</div>
                 </div>
               </div>
 
@@ -838,16 +959,6 @@ const ReportPreview: React.FC<ReportPreviewProps> = ({
               >
                 Cerrar
               </button>
-              {isSingleConductorReport && (
-                <button
-                  onClick={shareViaWhatsApp}
-                  disabled={isSharing}
-                  className="flex items-center justify-center space-x-2 bg-gradient-to-r from-green-500 to-green-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
-                >
-                  <Share2 className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="text-sm sm:text-base">{isSharing ? 'Compartiendo...' : 'Compartir por WhatsApp'}</span>
-                </button>
-              )}
             </div>
           </div>
         </div>
