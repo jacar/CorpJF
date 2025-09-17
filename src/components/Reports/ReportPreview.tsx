@@ -244,6 +244,7 @@ const ReportPreview: React.FC<ReportPreviewProps> = ({
           const leftW = (metaRight - metaLeft) * 0.7;
           const rightW = (metaRight - metaLeft) * 0.3;
           doc.rect(metaLeft, rowY1, leftW, rowH);
+        // place text slightly lower and inset from left border
           doc.text('CONDUCTOR:', metaLeft + 2, rowY1 + 4.6);
           doc.rect(metaLeft + leftW, rowY1, rightW, rowH);
           doc.text('UNIDAD:', metaLeft + leftW + 2, rowY1 + 4.6);
@@ -303,9 +304,8 @@ const ReportPreview: React.FC<ReportPreviewProps> = ({
         { key: 'num', title: 'N°', width: 10 },
         { key: 'nombre', title: 'NOMBRE Y APELLIDO', width: 78 },
         { key: 'cedula', title: 'NRO DE CEDULA', width: 35 },
-        { key: 'gerencia', title: 'GERENCIA', width: 32 },
-        { key: 'hora', title: 'HORA', width: 20 },
-        { key: 'firma', title: 'FIRMA', width: 15 },
+        { key: 'gerencia', title: 'GERENCIA', width: 42 },
+        { key: 'hora', title: 'HORA', width: 25 }
       ];
       const totalWidth = columns.reduce((s, c) => s + c.width, 0); // 190
       const startX = (pageWidth - totalWidth) / 2;
@@ -338,18 +338,19 @@ const ReportPreview: React.FC<ReportPreviewProps> = ({
             nombre: '',
             cedula: '',
             gerencia: '',
-            hora: '',
-            firma: '',
+            hora: ''
           };
         }
         const passenger = passengers.find(p => p.id === trip.passengerId);
+        // Asegurarse de que se obtenga la gerencia correctamente
+        const gerencia = passenger?.gerencia || trip.passengerGerencia || '';
+        
         return {
           num: String(idx + 1),
           nombre: passenger?.name || trip.passengerName || '',
           cedula: passenger?.cedula || trip.passengerCedula || '',
-          gerencia: passenger?.gerencia || '',
-          hora: format(new Date(trip.startTime), 'HH:mm', { locale: es }),
-          firma: '',
+          gerencia: gerencia,
+          hora: format(new Date(trip.startTime), 'HH:mm', { locale: es })
         };
       });
 
@@ -421,21 +422,21 @@ const ReportPreview: React.FC<ReportPreviewProps> = ({
       // Contratista box
       doc.rect(margin, y, sigWidth, sigHeight);
       doc.setFont('helvetica', 'bold');
-      doc.text('Verificado por: Contratista', margin + 2, y + 6);
+      doc.text('Verificado por: CONTRATISTA CORPORACIÓN JF C.A', margin + 2, y + 6);
       doc.setFont('helvetica', 'normal');
-      doc.text(`CI: ${contratista?.ci || '19.408.187'}`, margin + 2, y + 12);
-      doc.text(`Nombre: ${contratista?.name || 'Patricia Chávez'}`, margin + 2, y + 18);
+      doc.text(`Nombre: ${contratista?.name || 'RONALD MATA'}`, margin + 2, y + 12);
+      doc.text(`CI: ${contratista?.ci || '19.408.187'}`, margin + 2, y + 18);
       doc.text(`Cargo: ${contratista?.cargo || 'SUPERVISOR DE OPERACIONES'}`, margin + 2, y + 24);
 
       // Corporación box
       const rightX = margin + sigWidth + 10;
       doc.rect(rightX, y, sigWidth, sigHeight);
       doc.setFont('helvetica', 'bold');
-      doc.text('Verificado por: CORPORACIÓN JF C.A.', rightX + 2, y + 6);
+      doc.text('Verificado por: PETROBOSCAN, S.A.', rightX + 2, y + 6);
       doc.setFont('helvetica', 'normal');
-      doc.text(`CI: ${corporacion?.ci || '12.380.111'}`, rightX + 2, y + 12);
-      doc.text(`Nombre: ${corporacion?.name || 'LEOBALDO MORAN'}`, rightX + 2, y + 18);
-      doc.text(`Cargo: ${corporacion?.cargo || 'Supervisor de transporte'}`, rightX + 2, y + 24);
+      doc.text(`Nombre: ${corporacion?.name || 'PATRICIA CHAVEZ'}`, rightX + 2, y + 12);
+      doc.text(`CI: ${corporacion?.ci || '19.408.187'}`, rightX + 2, y + 18);
+      doc.text(`Cargo: ${corporacion?.cargo || 'SUPERVISOR DE TRANSPORTE'}`, rightX + 2, y + 24);
 
       const pdfBlob = doc.output('blob');
 
@@ -806,19 +807,17 @@ const ReportPreview: React.FC<ReportPreviewProps> = ({
 
               <div className="signatures">
                 <div className="sig">
-                  <div><strong>Verificado por:</strong> Contratista</div>
-                  <div><strong>Nombre:</strong> {contratistaSignature?.name || 'LEOBALDO MORAN'}</div>
-                  <div><strong>CI:</strong> {contratistaSignature?.ci || '12.380.111'}</div>
+                  <div><strong>Verificado por:</strong>  CONTRATISTA CORPORACIÓN JF C.A</div>
+                  <div><strong>Nombre:</strong> {contratistaSignature?.name || 'RONALD MATA'}</div>
+                  <div><strong>CI:</strong> {contratistaSignature?.ci || '19.408.187'}</div>
                   <div><strong>Cargo:</strong> {contratistaSignature?.cargo || 'SUPERVISOR DE OPERACIONES'}</div>
-                  <div><strong>Firma:</strong> ___________________________</div>
                 </div>
 
                 <div className="sig">
-                  <div><strong>Verificado por:</strong> CORPORACIÓN JF C.A.</div>
-                  <div><strong>Nombre:</strong> {corporacionSignature?.name || 'Patricia Chávez'}</div>
+                  <div><strong>Verificado por:</strong> PETROBOSCAN, S.A. </div>
+                  <div><strong>Nombre:</strong> {corporacionSignature?.name || 'PATRICIA CHAVEZ'}</div>
                   <div><strong>CI:</strong> {corporacionSignature?.ci || '19.408.187'}</div>
-                  <div><strong>Cargo:</strong> {corporacionSignature?.cargo || 'Supervisor de transporte'}</div>
-                  <div><strong>Firma:</strong> ___________________________</div>
+                  <div><strong>Cargo:</strong> {corporacionSignature?.cargo || 'SUPERVISOR DE TRANSPORTE'}</div>
                 </div>
               </div>
             </div>

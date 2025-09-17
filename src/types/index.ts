@@ -34,6 +34,7 @@ export interface Trip {
   passengerId: string;
   passengerName: string;
   passengerCedula: string;
+  passengerGerencia?: string;
   conductorId: string;
   conductorName: string;
   ruta: string;

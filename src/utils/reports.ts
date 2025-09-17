@@ -255,12 +255,12 @@ export const generateOfficialReport = (
   // Firmas de verificación con datos registrados
   if (contratistaSignatures.length > 0 || corporacionSignatures.length > 0) {
     reportData.push([
-      'VERIFICADO POR CONTRATISTA:',
+      'VERIFICADO POR CONTRATISTA',
       '',
       '',
       '',
+      'VERIFICADO POR PETROBOSCAN, S.A.',
       '',
-      'VERIFICADO POR CORPORACIÓN JF:',
       '',
       '',
       '',
@@ -288,8 +288,8 @@ export const generateOfficialReport = (
       '',
       '',
       '',
-      '',
       corporacionSign ? `NOMBRE: ${corporacionSign.name}` : 'NOMBRE: ________________',
+      '',
       '',
       '',
       '',
@@ -301,8 +301,8 @@ export const generateOfficialReport = (
       '',
       '',
       '',
-      '',
       corporacionSign ? `C.I.: ${corporacionSign.ci}` : 'C.I.: ________________',
+      '',
       '',
       '',
       '',
@@ -314,8 +314,8 @@ export const generateOfficialReport = (
       '',
       '',
       '',
-      '',
       corporacionSign ? `CARGO: ${corporacionSign.cargo}` : 'CARGO: ________________',
+      '',
       '',
       '',
       '',
@@ -327,8 +327,8 @@ export const generateOfficialReport = (
       '',
       '',
       '',
-      '',
       'FIRMA: ________________',
+      '',
       '',
       '',
       '',
@@ -336,12 +336,12 @@ export const generateOfficialReport = (
     ]);
   } else {
     reportData.push([
-      'VERIFICADO POR CONTRATISTA:',
+      'VERIFICADO POR CONTRATISTA',
       '',
       '',
       '',
+      'VERIFICADO POR PETROBOSCAN, S.A.',
       '',
-      'VERIFICADO POR CORPORACIÓN JF:',
       '',
       '',
       '',
@@ -353,11 +353,11 @@ export const generateOfficialReport = (
       '',
       '',
       '',
-      '',
       'NOMBRE: ________________',
       '',
       '',
       '',
+      '',
       ''
     ]);
     
@@ -366,8 +366,8 @@ export const generateOfficialReport = (
       '',
       '',
       '',
-      '',
       'C.I.: ________________',
+      '',
       '',
       '',
       '',
@@ -379,8 +379,8 @@ export const generateOfficialReport = (
       '',
       '',
       '',
-      '',
       'CARGO: ________________',
+      '',
       '',
       '',
       '',
@@ -392,8 +392,8 @@ export const generateOfficialReport = (
       '',
       '',
       '',
-      '',
       'FIRMA: ________________',
+      '',
       '',
       '',
       '',
@@ -559,6 +559,7 @@ export const generateOfficialPDFReport = (
   headers.forEach((header, index) => {
     doc.text(header, xPos + 2, yPosition + 3);
     if (index < headers.length - 1) {
+      doc.setDrawColor(200, 200, 200);
       doc.line(xPos + colWidths[index], yPosition - 5, xPos + colWidths[index], yPosition + 7);
     }
     xPos += colWidths[index];
@@ -726,7 +727,7 @@ export const generateOfficialPDFReport = (
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-  doc.text('VERIFICADO POR CORPORACIÓN JF', rightX, yPosition);
+  doc.text('VERIFICADO POR PETROBOSCAN, S.A.', rightX, yPosition);
   
   yPosition += 8;
   doc.setFont('helvetica', 'normal');

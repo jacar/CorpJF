@@ -2,106 +2,210 @@ import { Conductor } from '../types';
 
 export const defaultConductorsData = [
   { 
-    name: "CARLOS CASTRO", 
-    cedula: "10001001", 
-    placa: "281", 
-    area: "ADMINISTRATIVA RICHMOND",
-    ruta: "LA LAGUNITA - LOS PATRULLEROS-RICHMOND"
+    name: "LISBETH CELINA PIÑA MARIN", 
+    cedula: "13878642", 
+    placa: "", 
+    area: "AIT"
   },
   { 
-    name: "ALBERTO ROMERO", 
-    cedula: "10001002", 
-    placa: "292", 
-    area: "ADMINISTRATIVA RICHMOND",
-    ruta: "LOS MODINES-SANTA FE - RICHMOND"
+    name: "RAMIRO SEGUNDO MONTERO DIAZ", 
+    cedula: "13002493", 
+    placa: "", 
+    area: "AIT"
   },
   { 
-    name: "LINO ACOSTA", 
-    cedula: "10001003", 
-    placa: "348", 
-    area: "ADMINISTRATIVA RICHMOND",
-    ruta: "CORE 3 - PICOLA -SAN JACINTO-RICHMOND"
+    name: "RICHARD ALEXANDER GALIZ RIVERO", 
+    cedula: "11479380", 
+    placa: "", 
+    area: "AIT"
   },
   { 
-    name: "LEANDRO MARTINEZ", 
-    cedula: "10001004", 
-    placa: "280", 
-    area: "ADMINISTRATIVA RICHMOND",
-    ruta: "18 OCTUBRE-RICHMOND"
+    name: "MERVIN RICARDO GONZALEZ GONZALEZ", 
+    cedula: "16017790", 
+    placa: "", 
+    area: "AIT"
   },
   { 
-    name: "JOSE GARCIA", 
-    cedula: "10001005", 
-    placa: "278", 
-    area: "ADMINISTRATIVA RICHMOND",
-    ruta: "TAMARE - PUNTA GORDA-CABIMAS - RICHMOND"
+    name: "DULCE MARIA OSORIO MUÑOZ", 
+    cedula: "20750117", 
+    placa: "", 
+    area: "OPERACIONES DE PRODUCCION"
   },
   { 
-    name: "LEOBALDO MORAN", 
-    cedula: "10001006", 
-    placa: "274", 
-    area: "ADMINISTRATIVA RICHMOND",
-    ruta: "EL PINAR - LOS HATICOS - RICHMOND"
+    name: "PEDRO JOSE GARCIA LOPEZ", 
+    cedula: "15748724", 
+    placa: "", 
+    area: "OPERACIONES DE PRODUCCION"
   },
   { 
-    name: "JOSUE PAZ", 
-    cedula: "10001007", 
-    placa: "320", 
-    area: "ADMINISTRATIVA RICHMOND",
-    ruta: "CONCEPCION - SOL AMADO - RICHMOND"
+    name: "BRUNO BARTOLO DIAZ BARRETO", 
+    cedula: "9728324", 
+    placa: "", 
+    area: "OPERACIONES DE PRODUCCION"
   },
   { 
-    name: "RICARDO EVERON", 
-    cedula: "10001008", 
-    placa: "279", 
-    area: "ADMINISTRATIVA RICHMOND",
-    ruta: "SAN FRANCISCO - RICHMOND"
+    name: "NORIS BEATRIZ PEÑA AVENDAÑO", 
+    cedula: "19285320", 
+    placa: "", 
+    area: "OPERACIONES DE PRODUCCION"
   },
   { 
-    name: "CARLOS NAVEDA", 
-    cedula: "10001009", 
-    placa: "297", 
-    area: "ADMINISTRATIVA CAMPO BOSCAN",
-    ruta: "LAGUNITA-CB"
+    name: "MINORLYS DE LOS ANGELES ORTEGA VILLALOBOS", 
+    cedula: "17414583", 
+    placa: "", 
+    area: "MANTENIMIENTO"
   },
   { 
-    name: "HECTOR AVILA", 
-    cedula: "10001010", 
-    placa: "296", 
-    area: "ADMINISTRATIVA CAMPO BOSCAN",
-    ruta: "MCBO-CORE 3-CB"
+    name: "REVILLA GIOVANNI", 
+    cedula: "7886902", 
+    placa: "", 
+    area: "MANTENIMIENTO"
   },
   { 
-    name: "DANIEL BRICEÑO", 
-    cedula: "10001011", 
-    placa: "290", 
-    area: "ADMINISTRATIVA CAMPO BOSCAN",
-    ruta: "SAN FCO - EL PINAR- CB"
+    name: "EDUARDO ERNESTO SANTRICH URQUIJO", 
+    cedula: "9722931", 
+    placa: "", 
+    area: "MANTENIMIENTO"
   },
   { 
-    name: "JOSE MONTIEL", 
-    cedula: "10001012", 
-    placa: "291", 
-    area: "ADMINISTRATIVA CAMPO BOSCAN",
-    ruta: "SAN FCO - EL EL BAJO- CB"
+    name: "JUNIOR MANUEL PACHECO FINOL", 
+    cedula: "15720360", 
+    placa: "", 
+    area: "MANTENIMIENTO"
   },
   { 
-    name: "ARMANDO OVALLE", 
-    cedula: "10001013", 
-    placa: "292", 
-    area: "ADMINISTRATIVA CAMPO BOSCAN",
-    ruta: "DESARROLLO"
+    name: "INGRID COROMOTO ESPINOZA MORENO", 
+    cedula: "16986555", 
+    placa: "", 
+    area: "SERVICIOS GENERALES"
+  },
+  { 
+    name: "NELLY JULIO MERCADO", 
+    cedula: "11913305", 
+    placa: "", 
+    area: "SERVICIOS GENERALES"
+  },
+  { 
+    name: "MILYMAR DEL VALLE GARCIA BORREGO", 
+    cedula: "15523660", 
+    placa: "", 
+    area: "SEGURIDAD E HIGIENE OCUPACIONAL - AMBIENTE"
+  },
+  { 
+    name: "MARYCRUZ RAMOS DE VILCHEZ", 
+    cedula: "12714510", 
+    placa: "", 
+    area: "RECURSOS HUMANOS"
+  },
+  { 
+    name: "NORBERTO RAMON VILLALOBOS INCIARTE", 
+    cedula: "7785176", 
+    placa: "", 
+    area: "FACILIDADES"
+  },
+  { 
+    name: "JENNY CHIQUINQUIRA MORALES VILLALOBOS", 
+    cedula: "14833824", 
+    placa: "", 
+    area: "INGENIERIA DE PETROLEO"
+  },
+  { 
+    name: "HILARION RAUL PARIS AZUAJE", 
+    cedula: "14562124", 
+    placa: "", 
+    area: "PLANIFICACION"
+  },
+  { 
+    name: "ROMMEL ANTONIO WHILCHY MORALES", 
+    cedula: "6338873", 
+    placa: "", 
+    area: "ESTUDIOS INTEGRADOS"
+  },
+  { 
+    name: "LEAR ACOSTA DAVID RAMON", 
+    cedula: "17187391", 
+    placa: "", 
+    area: "POZOS"
+  },
+  { 
+    name: "MELISSA CAROLINA MEDINA", 
+    cedula: "14117940", 
+    placa: "", 
+    area: "FACILIDADES"
+  },
+  { 
+    name: "OSCAR ALBERTO VALBUENA PERDOMO", 
+    cedula: "9748877", 
+    placa: "", 
+    area: "OPERACIONES DE PRODUCCION"
+  },
+  { 
+    name: "ANGELA MARIA HERNANDEZ LUZARDO", 
+    cedula: "18063392", 
+    placa: "", 
+    area: "RECURSOS HUMANOS"
+  },
+  { 
+    name: "LUIS JOSE VARGAS PEÑA", 
+    cedula: "15305967", 
+    placa: "", 
+    area: "INGENIERIA DE PETROLEO"
+  },
+  { 
+    name: "FIDEL JOSE MONTILLA LEON", 
+    cedula: "23554147", 
+    placa: "", 
+    area: "INGENIERIA DE PETROLEO"
+  },
+  { 
+    name: "ZULIMA PATRICIA CAICEDO DE ALVAREZ", 
+    cedula: "23554147", 
+    placa: "", 
+    area: "SALUD"
+  },
+  { 
+    name: "ERENICE MAITHE POLANCO VARELA", 
+    cedula: "17834145", 
+    placa: "", 
+    area: "FINANZAS"
+  },
+  { 
+    name: "ANGEL MIGUEL SOTO BOHORQUEZ", 
+    cedula: "20508321", 
+    placa: "", 
+    area: "RECURSOS HUMANOS"
+  },
+  { 
+    name: "MAINERY NAVA", 
+    cedula: "23876264", 
+    placa: "", 
+    area: "CONTRATACION"
+  },
+  { 
+    name: "EUDIS ALEJANDRO QUERO CHOURIO", 
+    cedula: "19341251", 
+    placa: "", 
+    area: "MANTENIMIENTO"
+  },
+  { 
+    name: "ONEIDA JANETH LEON MONTES DE OCA", 
+    cedula: "10806897", 
+    placa: "", 
+    area: "ESTUDIOS INTEGRADOS"
+  },
+  { 
+    name: "GIL MARIA ELENA", 
+    cedula: "17393371", 
+    placa: "", 
+    area: "PLANIFICACION"
   }
 ];
 
-export const generateDefaultConductors = (): Conductor[] => {
-  return defaultConductorsData.map((conductorData, index) => ({
-    id: (Date.now() + index).toString(),
-    name: conductorData.name,
-    cedula: conductorData.cedula,
-    placa: conductorData.placa,
-    area: conductorData.area,
-    ruta: conductorData.ruta,
-    createdAt: new Date().toISOString()
+export function generateDefaultConductors(): Conductor[] {
+  return defaultConductorsData.map((conductor, index) => ({
+    id: `conductor-${index + 1}`,
+    ...conductor,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }));
-};
+}

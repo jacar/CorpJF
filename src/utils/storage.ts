@@ -27,33 +27,53 @@ const initializeDefaultData = async () => {
     localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(defaultUsers));
   }
   
-  // Check IndexedDB for passengers first
-  // const existingPassengers = await indexedDBService.getPassengers();
-  // if (existingPassengers.length === 0) {
-    try {
-      await indexedDBService.clearPassengers(); // Clear existing passengers
-      const defaultPassengers = await generateDefaultPassengers();
-      await indexedDBService.savePassengers(defaultPassengers); // Save directly to IndexedDB
-      console.log(`Generated and saved ${defaultPassengers.length} default passengers.`);
-    } catch (error) {
-      console.error('Error generando pasajeros por defecto:', error);
-    }
-  // }
-  
-  // if (!localStorage.getItem(STORAGE_KEYS.CONDUCTORS)) {
-  //   const defaultConductors = generateDefaultConductors();
-  //   localStorage.setItem(STORAGE_KEYS.CONDUCTORS, JSON.stringify(defaultConductors));
-  // }
-  
-  // Check IndexedDB for conductors
-  const existingConductors = await indexedDBService.getConductors();
-  if (existingConductors.length === 0) {
-    try {
-      const defaultConductors = generateDefaultConductors();
+  // Cargar conductores por defecto de manera segura
+  try {
+    const existingConductors = await indexedDBService.getConductors();
+    
+    // Si no hay conductores, cargar los predeterminados
+    if (existingConductors.length === 0) {
+      console.log('No se encontraron conductores existentes, cargando conductores predeterminados...');
+      
+      // Obtener conductores predeterminados
+      let defaultConductors = generateDefaultConductors();
+      
+      // Manejar cédulas duplicadas
+      const cedulaCount: Record<string, number> = {};
+      defaultConductors = defaultConductors.map(conductor => {
+        const cedula = conductor.cedula;
+        if (cedula in cedulaCount) {
+          // Si la cédula ya existe, agregar un sufijo numérico
+          cedulaCount[cedula]++;
+          return {
+            ...conductor,
+            cedula: `${cedula}-${cedulaCount[cedula]}`,
+            originalCedula: cedula  // Guardar la cédula original
+          };
+        } else {
+          cedulaCount[cedula] = 0;
+          return conductor;
+        }
+      });
+      
       await indexedDBService.saveConductors(defaultConductors);
-    } catch (error) {
-      console.error('Error generando conductores por defecto:', error);
+      console.log(`${defaultConductors.length} conductores predeterminados cargados exitosamente.`);
+    } else {
+      console.log(`Se encontraron ${existingConductors.length} conductores existentes.`);
     }
+  } catch (error) {
+    console.error('Error al cargar conductores:', error);
+  }
+  
+  // Cargar pasajeros por defecto
+  try {
+    const existingPassengers = await indexedDBService.getPassengers();
+    if (existingPassengers.length === 0) {
+      const defaultPassengers = await generateDefaultPassengers();
+      await indexedDBService.savePassengers(defaultPassengers);
+    }
+  } catch (error) {
+    console.error('Error al cargar pasajeros por defecto:', error);
   }
 };
 
@@ -98,7 +118,6 @@ export const storage = {
       
       // Optionally, keep a small, manageable subset in localStorage for quick access if needed,
       // but for now, we'll rely on IndexedDB to avoid quota issues.
-      // To prevent future issues, we can clear the old localStorage data.
       // if (localStorage.getItem(STORAGE_KEYS.PASSENGERS)) {
       //   localStorage.removeItem(STORAGE_KEYS.PASSENGERS);
       // }
