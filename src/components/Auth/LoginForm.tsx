@@ -84,7 +84,11 @@ const LoginForm: React.FC = () => {
         <div className="bg-white/95 backdrop-blur-sm py-8 px-6 shadow-2xl rounded-xl border border-white/20">
           {/* Selector de tipo de login */}
           <div className="mb-6">
+<<<<<<< HEAD
             <div className="flex flex-col sm:flex-row rounded-lg bg-gray-100 p-1 space-y-1 sm:space-y-0 sm:space-x-1">
+=======
+            <div className="flex rounded-lg bg-gray-100 p-1">
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
               <button
                 type="button"
                 onClick={() => {
@@ -93,6 +97,7 @@ const LoginForm: React.FC = () => {
                   setUsername('');
                   setPassword('');
                 }}
+<<<<<<< HEAD
                 className={`flex-1 flex items-center justify-center space-x-2 py-3 px-2 sm:px-4 rounded-md text-sm font-medium transition-all duration-200 ${
                   loginType === 'admin'
                     ? 'bg-primary text-white shadow-lg transform scale-[1.02]'
@@ -100,6 +105,15 @@ const LoginForm: React.FC = () => {
                 }`}
               >
                 <Shield className="h-5 w-5 sm:h-6 sm:w-6" />
+=======
+                className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
+                  loginType === 'admin'
+                    ? 'bg-primary text-white shadow-lg transform scale-105'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <Shield className="h-6 w-6" />
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
                 <span>Administrador</span>
               </button>
               <button
@@ -110,6 +124,7 @@ const LoginForm: React.FC = () => {
                   setUsername('');
                   setPassword('');
                 }}
+<<<<<<< HEAD
                 className={`flex-1 flex items-center justify-center space-x-2 py-3 px-2 sm:px-4 rounded-md text-sm font-medium transition-all duration-200 ${
                   loginType === 'conductor'
                     ? 'bg-secondary text-white shadow-lg transform scale-[1.02]'
@@ -117,6 +132,15 @@ const LoginForm: React.FC = () => {
                 }`}
               >
                 <User className="h-5 w-5 sm:h-6 sm:w-6" />
+=======
+                className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
+                  loginType === 'conductor'
+                    ? 'bg-secondary text-white shadow-lg transform scale-105'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <User className="h-6 w-6" />
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
                 <span>Conductor</span>
               </button>
             </div>
@@ -198,7 +222,11 @@ const LoginForm: React.FC = () => {
           
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-500">
+<<<<<<< HEAD
               2025 Corporación JF C.A. Todos los derechos reservados.
+=======
+              © 2025 Corporación JF C.A. Todos los derechos reservados.
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
             </p>
           </div>
         </div>

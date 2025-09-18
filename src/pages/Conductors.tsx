@@ -3,6 +3,7 @@ import { applySEO } from '../utils/seo';
 import { Plus, Search, Edit, Trash2 } from 'lucide-react';
 import { Conductor } from '../types';
 import { storage } from '../utils/storage';
+<<<<<<< HEAD
 import { generateDefaultConductors } from '../utils/defaultConductors';
 
 // Lista fija de números de unidad (sin duplicados y ordenados)
@@ -11,6 +12,8 @@ const NUMEROS_UNIDAD = [
   '281', '290', '291', '292', '293',
   '294', '295', '296', '297', '320', '348'
 ];
+=======
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
 
 const Conductors: React.FC = () => {
   const [conductors, setConductors] = useState<Conductor[]>([]);
@@ -18,18 +21,31 @@ const Conductors: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingConductor, setEditingConductor] = useState<Conductor | null>(null);
+<<<<<<< HEAD
   const [formData, setFormData] = useState<Omit<Conductor, 'id' | 'createdAt' | 'updatedAt'>>({
     numeroUnidad: '',
     area: '',
     nombre: '',
+=======
+  const [formData, setFormData] = useState({
+    name: '',
+    cedula: '',
+    placa: '',
+    area: '',
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
     ruta: ''
   });
 
   useEffect(() => {
     applySEO({
       title: 'Conductores | Sistema de Reportes JF',
+<<<<<<< HEAD
       description: 'Administre conductores, unidades, áreas y rutas en el Sistema de Reportes JF.',
       keywords: 'conductores, unidades, rutas, transporte, gestión de conductores',
+=======
+      description: 'Administre conductores, placas, áreas y rutas en el Sistema de Reportes JF.',
+      keywords: 'conductores, placas, rutas, transporte, gestión de conductores',
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
       canonicalPath: '/conductors',
     });
     loadConductors();
@@ -40,6 +56,7 @@ const Conductors: React.FC = () => {
   }, [conductors, searchTerm]);
 
   const loadConductors = async () => {
+<<<<<<< HEAD
     try {
       // Primero forzamos la limpieza de los conductores existentes
       await storage.clearAll();
@@ -72,27 +89,67 @@ const Conductors: React.FC = () => {
     );
     
     setFilteredConductors(filtered);
+=======
+    const data = await storage.getConductors();
+    setConductors(data);
+  };
+
+  const filterConductors = () => {
+    if (!searchTerm) {
+      setFilteredConductors(conductors);
+    } else {
+      const filtered = conductors.filter(c => 
+        c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        c.cedula.includes(searchTerm) ||
+        c.placa.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredConductors(filtered);
+    }
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+<<<<<<< HEAD
     if (editingConductor) {
       // Actualizar conductor existente
       const updatedConductors = conductors.map(c => 
         c.id === editingConductor.id 
           ? { ...formData, id: c.id, updatedAt: new Date().toISOString(), createdAt: c.createdAt }
+=======
+    // Verificar si ya existe un conductor con la misma cédula
+    const existingConductor = conductors.find(c => c.cedula === formData.cedula && (!editingConductor || c.id !== editingConductor.id));
+    if (existingConductor) {
+      alert('Ya existe un conductor con esta cédula');
+      return;
+    }
+    
+    if (editingConductor) {
+      // Update existing conductor
+      const updatedConductors = conductors.map(c => 
+        c.id === editingConductor.id 
+          ? { ...c, ...formData }
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
           : c
       );
       await storage.saveConductors(updatedConductors);
       setConductors(updatedConductors);
     } else {
+<<<<<<< HEAD
       // Crear nuevo conductor
       const newConductor: Conductor = {
         ...formData,
         id: `cond-${Date.now()}`,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
+=======
+      // Create new conductor
+      const newConductor: Conductor = {
+        id: Date.now().toString(),
+        ...formData,
+        createdAt: new Date().toISOString()
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
       };
       
       const updatedConductors = [...conductors, newConductor];
@@ -104,9 +161,20 @@ const Conductors: React.FC = () => {
   };
 
   const handleEdit = (conductor: Conductor) => {
+<<<<<<< HEAD
     const { id, createdAt, updatedAt, ...rest } = conductor;
     setEditingConductor(conductor);
     setFormData(rest);
+=======
+    setEditingConductor(conductor);
+    setFormData({
+      name: conductor.name,
+      cedula: conductor.cedula,
+      placa: conductor.placa,
+      area: conductor.area || '',
+      ruta: conductor.ruta || ''
+    });
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
     setShowModal(true);
   };
 
@@ -119,32 +187,47 @@ const Conductors: React.FC = () => {
   };
 
   const resetForm = () => {
+<<<<<<< HEAD
     setFormData({
       numeroUnidad: '',
       area: '',
       nombre: '',
       ruta: ''
     });
+=======
+    setFormData({ name: '', cedula: '', placa: '', area: '', ruta: '' });
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
     setEditingConductor(null);
     setShowModal(false);
   };
 
   return (
     <div className="space-y-6 w-full">
+<<<<<<< HEAD
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <div className="space-y-1">
           <h1 className="text-2xl font-bold text-gray-800">Gestión de Conductores</h1>
+=======
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Gestión de Conductores</h1>
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
           <p className="text-gray-600">Administre los conductores del sistema</p>
         </div>
         <button
           onClick={() => setShowModal(true)}
+<<<<<<< HEAD
           className="flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2.5 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg w-full sm:w-auto"
+=======
+          className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
         >
           <Plus className="h-5 w-5" />
           <span>Nuevo Conductor</span>
         </button>
       </div>
 
+<<<<<<< HEAD
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="p-4 sm:p-6 border-b border-gray-100 bg-gray-50">
           <div className="relative max-w-md">
@@ -155,10 +238,23 @@ const Conductors: React.FC = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 w-full border-2 border-blue-100 focus:border-blue-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-200 focus:ring-opacity-50 transition-all text-sm sm:text-base bg-white text-gray-800 placeholder-gray-400"
+=======
+      <div className="bg-white rounded-lg shadow-md">
+        <div className="p-6 border-b border-gray-200">
+          <div className="relative">
+            <Search className="h-5 w-5 absolute left-3 top-3 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Buscar por nombre, cédula o placa..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
             />
           </div>
         </div>
 
+<<<<<<< HEAD
         {/* Versión de escritorio - Tabla */}
         <div className="hidden md:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
@@ -177,10 +273,36 @@ const Conductors: React.FC = () => {
                   Ruta
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-blue-700 uppercase tracking-wider">
+=======
+        <div className="overflow-x-auto md:overflow-visible">
+          <table className="w-full table-auto md:table-fixed">
+            <thead className="bg-gray-50 hidden md:table-header-group">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Conductor
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Cédula
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Placa
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Área
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Ruta
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Fecha Registro
+                </th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
                   Acciones
                 </th>
               </tr>
             </thead>
+<<<<<<< HEAD
             <tbody className="bg-white divide-y divide-gray-100">
               {filteredConductors.map((conductor, index) => (
                 <tr key={conductor.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
@@ -200,13 +322,46 @@ const Conductors: React.FC = () => {
                     <button
                       onClick={() => handleEdit(conductor)}
                       className="text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 p-1.5 rounded-lg transition-colors"
+=======
+            <tbody className="divide-y divide-gray-200 block md:table-row-group">
+              {filteredConductors.map((conductor) => (
+                <tr key={conductor.id} className="hover:bg-gray-50 block md:table-row">
+                  <td className="px-6 py-4 block md:table-cell">
+                    <div className="font-medium text-gray-900">{conductor.name}</div>
+                  </td>
+                  <td className="px-6 py-4 block md:table-cell text-gray-600">
+                    {conductor.cedula}
+                  </td>
+                  <td className="px-6 py-4 block md:table-cell text-gray-600">
+                    {conductor.placa}
+                  </td>
+                  <td className="px-6 py-4 block md:table-cell text-gray-600">
+                    {conductor.area || 'N/A'}
+                  </td>
+                  <td className="px-6 py-4 block md:table-cell text-gray-600">
+                    <div className="max-w-xs truncate" title={conductor.ruta}>
+                      {conductor.ruta || 'N/A'}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 block md:table-cell text-gray-600">
+                    {new Date(conductor.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 text-center space-x-2 block md:table-cell">
+                    <button
+                      onClick={() => handleEdit(conductor)}
+                      className="text-blue-600 hover:text-blue-800 transition-colors"
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
                       title="Editar"
                     >
                       <Edit className="h-5 w-5" />
                     </button>
                     <button
                       onClick={() => handleDelete(conductor.id)}
+<<<<<<< HEAD
                       className="text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 p-1.5 rounded-lg transition-colors"
+=======
+                      className="text-red-600 hover:text-red-800 transition-colors"
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
                       title="Eliminar"
                     >
                       <Trash2 className="h-5 w-5" />
@@ -217,6 +372,7 @@ const Conductors: React.FC = () => {
             </tbody>
           </table>
         </div>
+<<<<<<< HEAD
 
         {/* Versión móvil - Tarjetas */}
         <div className="md:hidden p-4 space-y-3">
@@ -278,6 +434,14 @@ const Conductors: React.FC = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
+=======
+      </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
             <h2 className="text-xl font-bold text-gray-900 mb-4">
               {editingConductor ? 'Editar Conductor' : 'Nuevo Conductor'}
             </h2>
@@ -285,6 +449,7 @@ const Conductors: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
+<<<<<<< HEAD
                   N° de Unidad *
                 </label>
                 <select
@@ -304,11 +469,14 @@ const Conductors: React.FC = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
+=======
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
                   Nombre Completo *
                 </label>
                 <input
                   type="text"
                   required
+<<<<<<< HEAD
                   value={formData.nombre}
                   onChange={(e) => setFormData({...formData, nombre: e.target.value.toUpperCase()})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -316,6 +484,40 @@ const Conductors: React.FC = () => {
                 />
               </div>
 
+=======
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Cédula *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.cedula}
+                  onChange={(e) => setFormData({ ...formData, cedula: e.target.value })}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Placa del Vehículo *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.placa}
+                  onChange={(e) => setFormData({ ...formData, placa: e.target.value.toUpperCase() })}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Área
@@ -323,6 +525,7 @@ const Conductors: React.FC = () => {
                 <input
                   type="text"
                   value={formData.area}
+<<<<<<< HEAD
                   onChange={(e) => setFormData({...formData, area: e.target.value.toUpperCase()})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Ej: ADMINISTRATIVA RICHMOND"
@@ -348,20 +551,53 @@ const Conductors: React.FC = () => {
                   type="button"
                   onClick={resetForm}
                   className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+=======
+                  onChange={(e) => setFormData({ ...formData, area: e.target.value })}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Ej: ADMINISTRATIVA RICHMOND"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Ruta Asignada
+                </label>
+                <textarea
+                  value={formData.ruta}
+                  onChange={(e) => setFormData({ ...formData, ruta: e.target.value })}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Ej: LA LAGUNITA - LOS PATRULLEROS-RICHMOND"
+                  rows={2}
+                />
+              </div>
+              
+              <div className="flex space-x-3 pt-4">
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
+<<<<<<< HEAD
                   className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   {editingConductor ? 'Actualizar' : 'Guardar'}
+=======
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  {editingConductor ? 'Actualizar' : 'Crear'}
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
+<<<<<<< HEAD
       <style jsx global>{`
         @keyframes shake {
           0%, 100% { transform: translateX(0); }
@@ -372,6 +608,8 @@ const Conductors: React.FC = () => {
           animation: shake 0.3s ease-in-out;
         }
       `}</style>
+=======
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
     </div>
   );
 };

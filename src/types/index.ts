@@ -17,12 +17,23 @@ export interface Passenger {
 
 export interface Conductor {
   id: string;
+<<<<<<< HEAD
   numeroUnidad: string;
   area: string;
   nombre: string;
   ruta: string;
   createdAt?: string;
   updatedAt?: string;
+=======
+  name: string;
+  cedula: string;
+  placa: string;
+  area?: string;
+  ruta?: string;
+  avatarUrl?: string;
+  coverUrl?: string;
+  createdAt: string;
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
 }
 
 export interface Trip {

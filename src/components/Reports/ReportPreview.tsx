@@ -528,7 +528,11 @@ const ReportPreview: React.FC<ReportPreviewProps> = ({
       doc.text('Verificado por: CONTRATISTA CORPORACIÓN JF C.A', margin + 2, y + 6);
       doc.setFont('helvetica', 'normal');
       doc.text(`Nombre: ${contratista?.name || 'RONALD MATA'}`, margin + 2, y + 12);
+<<<<<<< HEAD
       doc.text(`CI: ${contratista?.ci || '20.764.490'}`, margin + 2, y + 18);
+=======
+      doc.text(`CI: ${contratista?.ci || '19.408.187'}`, margin + 2, y + 18);
+>>>>>>> 9010aba2abdc6426bec1f70fd63a2c8dc7902e59
       doc.text(`Cargo: ${contratista?.cargo || 'SUPERVISOR DE OPERACIONES'}`, margin + 2, y + 24);
 
       // Corporación box
